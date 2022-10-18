@@ -1,0 +1,239 @@
+//insert at beg
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    int data;
+    struct node *prev;
+    struct node *next;
+}*head,*tail;
+
+void insertBeg(){
+    struct node*newnode;
+    newnode=(struct node*)malloc(sizeof(struct node));
+
+    printf("\nEnter the value you want to insert : ");
+    scanf("%d",&newnode->data);
+    newnode->prev=newnode->next=0;
+
+    if(head==NULL){
+        head=newnode;
+        tail=newnode;
+    }
+
+    else{
+        newnode->next=head;
+        head->prev=newnode;
+        head=newnode;
+    }
+}
+
+void insertEnd(){
+    struct node*newnode;
+    newnode=(struct node*)malloc(sizeof(struct node));
+
+    printf("\nEnter the value you want to insert : ");
+    scanf("%d",&newnode->data);
+    newnode->prev=newnode->next=0;
+
+    if(head==NULL){
+        head=newnode;
+        tail=newnode;
+    }
+
+    else{
+        tail->next=newnode;
+        newnode->prev=tail;
+        tail=newnode;
+    }
+}
+
+int length(){
+    int count=0;
+    if(head==0){
+        return count;
+    }
+    else{
+        struct node*temp=head;
+        while(temp->next!=NULL){
+            count++;
+            temp=temp->next;
+        }
+        return count+1;
+    }
+}
+
+void insertPos(){
+    struct node*temp=head;
+    int pos,i=1,l;
+    l=length();
+    printf("\nEnter the position : ");
+    scanf("%d",&pos);
+
+    if(pos==1){
+        insertBeg();
+    }
+    else if(pos<1 || pos>l){
+        printf("\nInvalid input. Position doesn't exist.");
+    }
+    else{
+        struct node*newnode;
+        newnode=(struct node*)malloc(sizeof(struct node));
+
+        printf("\nEnter the value you want to insert : ");
+        scanf("%d",&newnode->data);
+        newnode->prev=newnode->next=0;
+
+        while(i<pos-1){
+            temp=temp->next;
+            i++;
+        }
+        newnode->next=temp->next;
+        newnode->prev=temp;
+        temp->next=temp->next->prev=newnode;
+    }
+}
+
+//deletion
+
+void deleteBeg(){
+    struct node*temp=head;
+
+    if(head==NULL){
+        printf("\nThe list is empty");
+    }
+    else{
+
+    temp->next->prev=0;
+    head=temp->next;   
+
+    free(temp);
+    }
+}
+
+void deleteEnd(){    
+    struct node*temp=tail;
+    if(head==NULL){
+        printf("\nThe list is empty");
+    }
+    else{
+
+    
+    tail=temp->prev;
+    tail->next=0;
+
+    free(temp);
+    }
+}
+
+void deletePos(){
+    struct node*temp=head;
+    int pos,i=1,l;
+    l=length();
+
+    printf("\nEnter the position you want to insert at : ");
+    scanf("%d",&pos);
+
+    if(pos<1 || pos>l){
+        printf("\nInvalid position");
+    }
+    else if(pos==1){
+        deleteBeg();
+    }
+    else{
+        while(i<pos){
+            temp=temp->next;
+            i++;
+        }
+        temp->next->prev=temp->prev;
+        temp->prev->next=temp->next;
+
+        free(temp);
+    }
+}
+
+void reverse(){
+    struct node*cur,*nxt;
+    if(head==0){
+        printf("\nthe list is empty!");
+    }
+    else{
+        cur=head;
+        while(cur!=0){
+            nxt=cur->next;
+            cur->next=cur->prev;
+            cur->prev=nxt;
+            cur=nxt;            
+        }
+        nxt=head;
+        head=tail;
+        tail=nxt;
+    }
+}
+
+void display(){
+    struct node*temp=head;
+
+    printf("\nDisplaying the elements of the list..\n");
+
+    if(temp==NULL){
+        printf("\nThe list is empty.");
+    }
+    else{
+        while(temp->next!=0){
+            printf(" %d ",temp->data);
+            temp=temp->next;
+        }
+        printf(" %d ",temp->data);
+    }
+}
+
+void main(){
+    int choice,c=1;
+
+    while(c){
+        printf("\nEnter 1. to insert at the beg.");
+        printf("\nEnter 2. to display the elements.");
+        printf("\nEnter 3. to insert at the end.");
+        printf("\nEnter 4. to insert at the pos.");
+        printf("\nEnter 5. to delete from the beg.");
+        printf("\nEnter 6. to delete from the end.");
+        printf("\nEnter 7. to delete from the pos.");
+        printf("\nEnter 8. to reverse the list.\n");
+        scanf("%d",&choice);
+
+        if(choice==1){
+            insertBeg();
+        }
+        else if (choice==2){
+            display();
+        }
+        else if(choice==3){
+            insertEnd();
+        }
+        else if(choice==4){
+            insertPos();
+        }
+        else if(choice==5){
+            deleteBeg();
+        }
+        else if(choice==6){
+            deleteEnd();
+        }
+        else if(choice==7){
+            deletePos();
+        }
+        else if(choice==8){
+            reverse();
+        }
+        else{
+            printf("\nInvalid Choice. Please try again!");
+        }
+
+        printf("\nEnter 1 if you want to continue and 0 to exit.");
+        scanf("%d",&c);
+    }
+
+    return;
+}
