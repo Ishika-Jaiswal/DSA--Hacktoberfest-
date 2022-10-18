@@ -1,0 +1,236 @@
+//Doubly circular linked list
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    int data;
+    struct node*prev;
+    struct node*next;
+}*head,*tail;
+
+void insertBeg(){
+    struct node*newnode;
+    newnode=(struct node*)malloc(sizeof(struct node));
+
+    printf("\nEnter the value to be inserted : ");
+    scanf("%d",&newnode->data);
+    newnode->next=newnode->prev=0;
+
+    if(head==0){
+        head=tail=newnode;
+        head->prev=newnode;
+        head->next=newnode;
+    }
+    else{
+        newnode->prev=head->prev;
+        newnode->next=head;
+        tail->next=newnode;
+        head->prev=newnode;
+        head=newnode;
+    }
+}
+
+void insertEnd(){
+    struct node*newnode;
+    newnode=(struct node*)malloc(sizeof(struct node));
+
+    printf("\nEnter the value to be inserted : ");
+    scanf("%d",&newnode->data);
+    newnode->prev=newnode->next=0;
+
+    if(head==0){
+        head=tail=newnode;
+        newnode->prev=newnode->next=head;
+    }
+    else{
+        newnode->prev=tail;
+        newnode->next=head;
+        tail->next=newnode;
+        head->prev=newnode;
+        tail=newnode;
+    }
+}
+
+int length(){
+    struct node*temp=head;
+    int c=1;
+
+    if(head->next==tail){
+        return c;
+    }
+    else{
+        while(temp->next!=head){
+            c++;
+            temp=temp->next;
+        }
+        return c+1;
+    }
+
+}
+
+void insertPos(){
+    int pos,l,i=1;
+    struct node*temp=head;
+    struct node*newnode;
+    
+    printf("\nEnter the positon : ");
+    scanf("%d",&pos);
+
+    l=length();
+
+    if(pos<1 || pos>l){
+        printf("\nInvalid position!");
+    }
+    else if(pos==1){
+        insertBeg();
+    }
+    else{
+        newnode=(struct node*)malloc(sizeof(struct node));
+        printf("\nEnter the value to be inserted : ");
+        scanf("%d",&newnode->data);
+        newnode->prev=newnode->next=0;
+
+        while(i<pos-1){
+            i++;
+            temp=temp->next;
+        }
+
+        newnode->prev=temp;
+        newnode->next=temp->next;
+        temp->next->prev=newnode;
+        temp->next=newnode;
+    }
+
+}
+
+//deletion
+
+void deleteBeg(){
+    struct node*temp=head;
+
+    if(head==0){
+        printf("\nThe list is empty.");
+    }
+    else if(temp->next==head){
+        head=tail=0;
+        free(temp);
+    }
+    else{
+        head=head->next;
+        head->prev=tail;
+        tail->next=head;
+        free(temp);
+    }
+}
+
+void deleteEnd(){
+    struct node*temp=tail;
+
+    if(head==0){
+        printf("\nThe list is empty.");
+    }
+    else if(head->next==temp){
+        head=tail=0;
+        free(temp);
+    }
+    else{
+        tail=tail->prev;
+        tail->next=head;
+        head->prev=tail;
+        free(temp);
+    }
+}
+
+void deletePos(){
+    int l,pos,i=1;
+    struct node*temp=head;
+
+    printf("\nenter the position : ");
+    scanf("%d",&pos);
+
+    l=length();
+
+    if(pos<1 || pos>l){
+        printf("\nInvalid position!");
+    }
+    else if(pos ==1){
+        deleteBeg();
+    }
+    else{
+        while(i<pos){
+            i++;
+            temp=temp->next;
+        }
+        temp->prev->next=temp->next;
+        temp->next->prev=temp->prev;
+
+        if(temp->next==head){
+            tail=temp->prev;
+            free(temp);
+        }
+        else{
+            free(temp);
+        }
+    }
+}
+
+void display(){
+    struct node*temp=head;
+
+    if(temp==NULL){
+        printf("\nThe list is empty.");
+    }
+    else{
+        while(temp->next!=head){
+            printf(" %d ",temp->data);
+            temp=temp->next;
+        }
+        printf(" %d ",temp->data);
+    }
+}
+
+void main(){
+    int choice,c=1;
+
+    while(c){
+        printf("\nEnter 1. to insert at the begining.");
+        printf("\nEnter 2. to display.");
+        printf("\nEnter 3. to insert at the end.");
+        printf("\nEnter 4. to insert at pos.");
+        printf("\nEnter 5. to delete from beg.");
+        printf("\nEnter 6. to delete from end.");
+        printf("\nEnter 7. to delete from pos.\n");
+        scanf("%d",&choice);
+
+        if(choice==1){
+            insertBeg();
+        }
+        else if(choice==2){
+            display();
+        }
+        else if(choice==3){
+            insertEnd();
+        }
+        else if(choice==4){
+            insertPos();
+        }
+        else if(choice==5){
+            deleteBeg();
+        }
+        else if(choice==6){
+            deleteEnd();
+        }
+        else if(choice==7){
+            deletePos();
+        }
+        else{
+            printf("\nInvalid choice!");
+        }
+
+        printf("\nEnter 1 to continue and 0 to exit : ");
+        scanf("%d",&c);
+    }
+
+    return;
+}
